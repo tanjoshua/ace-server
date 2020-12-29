@@ -18,4 +18,7 @@ router.post(
   listingController.postListing
 );
 
+// GET /listings/:listingId
+router.get("/:listingId", listingController.getListing);
+
 module.exports = router;

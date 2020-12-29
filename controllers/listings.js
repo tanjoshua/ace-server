@@ -6,7 +6,13 @@ const Listing = require("../models/listing");
 
 // get listings
 exports.getListings = (req, res, next) => {
-  res.status(200).json({ listings: [] });
+  Listing.find()
+    .then((listings) => {
+      res.json({ listings });
+    })
+    .catch((err) => {
+      return next(err);
+    });
 };
 
 // create listing
@@ -23,12 +29,18 @@ exports.postListing = (req, res, next) => {
   const title = req.body.title;
   const description = req.body.description;
   const tutor = req.body.tutor;
+  let imagePath;
+
+  // handle image
+  if (req.file) {
+    imagePath = req.file.path;
+  }
 
   // Create listing in database
   const listing = new Listing({
     title,
     description,
-    imagePath: "",
+    imagePath,
     tutor,
   });
 
@@ -43,7 +55,25 @@ exports.postListing = (req, res, next) => {
       });
     })
     .catch((err) => {
-      err.statusCode = 500;
+      next(err); // status code will be by default 500
+    });
+};
+
+// get single listing
+exports.getListing = (req, res, next) => {
+  const listingId = req.params.listingId;
+  Listing.findById(listingId)
+    .then((listing) => {
+      if (!listing) {
+        // no listing found
+        const error = new Error("No listing found");
+        error.statusCode = 404;
+        return next(error);
+      }
+
+      res.json(listing);
+    })
+    .catch((err) => {
       next(err);
     });
 };
