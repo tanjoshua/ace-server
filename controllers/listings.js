@@ -6,9 +6,19 @@ const Listing = require("../models/listing");
 
 // get listings
 exports.getListings = (req, res, next) => {
-  Listing.find()
+  const page = req.query.page || 1;
+  const count = 10;
+  let totalCount;
+
+  Listing.countDocuments()
+    .then((num) => {
+      totalCount = num;
+      return Listing.find()
+        .skip((page - 1) * count)
+        .limit(count);
+    })
     .then((listings) => {
-      res.json({ listings });
+      res.json({ listings, totalCount);
     })
     .catch((err) => {
       return next(err);

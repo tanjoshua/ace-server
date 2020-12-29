@@ -8,6 +8,7 @@ const listingController = require("../controllers/listings");
 const router = express.Router();
 
 // GET /listings
+// queries: page
 router.get("/", listingController.getListings);
 
 // POST /listings
