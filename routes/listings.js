@@ -26,6 +26,9 @@ router.put(
   listingController.updateListing
 );
 
+// DELETE /listings/listingId
+router.delete("/:listingId", listingController.deleteListing);
+
 // GET /listings/:listingId
 router.get("/:listingId", listingController.getListing);
 

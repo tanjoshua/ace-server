@@ -51,7 +51,7 @@ exports.postListing = (req, res, next) => {
       // successful response
       res.status(201).json({
         message: "Listing created",
-        listing,
+        listing: result,
       });
     })
     .catch((err) => {
@@ -89,9 +89,29 @@ exports.updateListing = (req, res, next) => {
       listing.description = description;
       return listing.save();
     })
-    .then(() => {
-      res.status(200).json(listing);
+    .then((result) => {
+      res.status(200).json(result);
     });
+};
+
+// delete listing
+exports.deleteListing = (req, res, next) => {
+  const listingId = req.params.listingId;
+
+  Listing.findByIdAndDelete(listingId, (err, result) => {
+    if (err) {
+      return next(err);
+    }
+
+    // not found
+    if (!result) {
+      const error = new Error("Listing not found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    res.json(result);
+  });
 };
 
 // get single listing
