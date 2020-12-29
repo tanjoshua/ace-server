@@ -8,6 +8,7 @@ const { v4: uuid4 } = require("uuid");
 
 // route imports
 const listingRoutes = require("./routes/listings");
+const authRoutes = require("./routes/auth");
 
 // config imports - config file is not uploaded to repo
 const config = require("./config");
@@ -58,6 +59,7 @@ app.use((req, res, next) => {
 
 // implement routes
 app.use("/listings", listingRoutes);
+app.use("/auth", authRoutes);
 
 // handling errors
 app.use((err, req, res, next) => {
