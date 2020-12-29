@@ -11,7 +11,7 @@ const app = express();
 // set up body parser - parse json data
 app.use(bodyParser.json());
 
-// add header to all responses
+// add header to all responses - allow CORS
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
