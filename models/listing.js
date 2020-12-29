@@ -10,6 +10,9 @@ const listingSchema = Schema(
     description: {
       type: String,
     },
+    imagePath: {
+      type: String,
+    },
     tutor: {
       type: mongoose.Types.ObjectId,
       ref: "Tutor",
