@@ -59,18 +59,54 @@ exports.postListing = (req, res, next) => {
     });
 };
 
-// get single listing
-exports.getListing = (req, res, next) => {
+// update listing
+exports.updateListing = (req, res, next) => {
+  // checking validation
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const err = new Error("Validation failed");
+    err.statusCode = 422;
+    return next(err);
+  }
+
+  // parsing data
   const listingId = req.params.listingId;
+  const title = req.body.title;
+  const description = req.body.description;
+
+  // update in database
   Listing.findById(listingId)
     .then((listing) => {
+      // listing not found
       if (!listing) {
-        // no listing found
         const error = new Error("No listing found");
         error.statusCode = 404;
         return next(error);
       }
 
+      // listing found
+      listing.title = title;
+      listing.description = description;
+      return listing.save();
+    })
+    .then(() => {
+      res.status(200).json(listing);
+    });
+};
+
+// get single listing
+exports.getListing = (req, res, next) => {
+  const listingId = req.params.listingId;
+  Listing.findById(listingId)
+    .then((listing) => {
+      // listing not found
+      if (!listing) {
+        const error = new Error("No listing found");
+        error.statusCode = 404;
+        return next(error);
+      }
+
+      // listing found
       res.json(listing);
     })
     .catch((err) => {

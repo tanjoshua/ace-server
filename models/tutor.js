@@ -9,6 +9,9 @@ const tutorSchema = Schema({
   description: {
     type: String,
   },
+  profilePicPath: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("Tutor", tutorSchema);

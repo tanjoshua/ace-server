@@ -18,6 +18,14 @@ router.post(
   listingController.postListing
 );
 
+// PUT /listings/:listingId
+router.put(
+  "/:listingId",
+  // validation
+  [body("title").trim().isLength({ min: 5 }), body("description").trim()],
+  listingController.updateListing
+);
+
 // GET /listings/:listingId
 router.get("/:listingId", listingController.getListing);
 
