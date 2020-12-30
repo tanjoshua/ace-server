@@ -14,7 +14,7 @@ const listingSchema = Schema(
       type: String,
     },
     tutor: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Tutor",
       required: true,
     },

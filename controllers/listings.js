@@ -3,6 +3,7 @@ const { validationResult } = require("express-validator");
 
 // internal imports
 const Listing = require("../models/listing");
+const Tutor = require("../models/users/tutor");
 
 // get listings
 exports.getListings = (req, res, next) => {
@@ -38,7 +39,7 @@ exports.postListing = (req, res, next) => {
   // parsing in data
   const title = req.body.title;
   const description = req.body.description;
-  const tutor = req.body.tutor;
+  const tutorId = req.userId;
   let imagePath;
 
   // handle image
@@ -51,17 +52,33 @@ exports.postListing = (req, res, next) => {
     title,
     description,
     imagePath,
-    tutor,
+    tutor: tutorId,
   });
 
   // save listing in database
+  let listingResult;
   listing
     .save()
     .then((result) => {
+      listingResult = result;
+      return Tutor.findById(tutorId);
+    })
+    .then((tutor) => {
+      // if tutor not found
+      if (!tutor) {
+        const error = new Error("Tutor not found");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      tutor.listings.push(result);
+      return tutor.save();
+    })
+    .then(() => {
       // successful response
       res.status(201).json({
         message: "Listing created",
-        listing: result,
+        listing: listingResult,
       });
     })
     .catch((err) => {

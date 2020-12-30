@@ -12,7 +12,7 @@ const studentSchema = Schema({
     required: false,
   },
   Parent: {
-    type: mongoose.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Parent",
     required: false,
   },

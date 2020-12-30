@@ -6,6 +6,12 @@ const tutorSchema = Schema({
   description: {
     type: String,
   },
+  listings: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Listing",
+    },
+  ],
 });
 
 module.exports = User.discriminator("Tutor", tutorSchema);

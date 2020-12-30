@@ -5,7 +5,7 @@ const User = require("./user");
 const parentSchema = Schema({
   // can change to multiple students
   Student: {
-    type: mongoose.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Student",
     required: false,
   },
