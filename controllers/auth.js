@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 // internal imports
 const config = require("../config"); // not stored in repo
-const User = require("../models/user");
+const User = require("../models/users/user");
 
 // signup
 exports.signup = (req, res, next) => {

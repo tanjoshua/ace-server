@@ -4,7 +4,7 @@ const { body } = require("express-validator");
 
 // internal imports
 const authController = require("../controllers/auth");
-const User = require("../models/user");
+const User = require("../models/users/user");
 
 const router = express.Router();
 
