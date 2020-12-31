@@ -155,7 +155,15 @@ exports.deleteListing = (req, res, next) => {
         throw error;
       }
 
-      res.json(listing);
+      return Tutor.findById(listing.tutor);
+    })
+    .then((tutor) => {
+      // remove from listings array
+      tutor.listings.pull(listingId);
+      return tutor.save();
+    })
+    .then(() => {
+      res.json({ message: "Listing deleted" });
     })
     .catch((err) => {
       return next(err);
