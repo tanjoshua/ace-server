@@ -128,20 +128,38 @@ exports.updateListing = (req, res, next) => {
 exports.deleteListing = (req, res, next) => {
   const listingId = req.params.listingId;
 
-  Listing.findByIdAndDelete(listingId, (err, result) => {
-    if (err) {
+  Listing.findById(listingId)
+    .then((listing) => {
+      // listing not found
+      if (!listing) {
+        const error = new Error("Listing not found");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      // check if user is creator
+      if (listing.tutor.toString() !== req.userId) {
+        const error = new Error("Forbidden");
+        error.statusCode = 403;
+        throw error;
+      }
+
+      // delete if no errors
+      return Listing.findByIdAndDelete(listingId);
+    })
+    .then((listing) => {
+      // listing not found
+      if (!listing) {
+        const error = new Error("Listing not found");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      res.json(listing);
+    })
+    .catch((err) => {
       return next(err);
-    }
-
-    // not found
-    if (!result) {
-      const error = new Error("Listing not found");
-      error.statusCode = 404;
-      return next(error);
-    }
-
-    res.json(result);
-  });
+    });
 };
 
 // get single listing
