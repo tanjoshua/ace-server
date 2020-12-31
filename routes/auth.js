@@ -26,6 +26,7 @@ router.post(
       .normalizeEmail(),
     body("password").trim().isLength({ min: 6 }),
     body("name").trim().notEmpty().isAlpha(),
+    body("type").isIn(["student", "parent", "tutor"]),
   ],
   authController.signup
 );

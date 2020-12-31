@@ -6,6 +6,9 @@ const jwt = require("jsonwebtoken");
 // internal imports
 const config = require("../config"); // not stored in repo
 const User = require("../models/users/user");
+const Tutor = require("../models/users/tutor");
+const Student = require("../models/users/student");
+const Parent = require("../models/users/parent");
 
 // signup
 exports.signup = (req, res, next) => {
@@ -20,6 +23,7 @@ exports.signup = (req, res, next) => {
   const email = req.body.email;
   const name = req.body.name;
   const password = req.body.password;
+  const type = req.body.type;
 
   // handle profile pic
   let profilePicPath;
@@ -30,7 +34,26 @@ exports.signup = (req, res, next) => {
   bcrypt
     .hash(password, 12)
     .then((result) => {
-      const user = new User({ email, name, profilePicPath, password: result });
+      const userDetails = { email, name, profilePicPath, password: result };
+      let user;
+
+      // handle account types
+      switch (type) {
+        case "tutor":
+          user = new Tutor(userDetails);
+          break;
+        case "student":
+          user = new Student(userDetails);
+          break;
+        case "parent":
+          parent = new Parent(userDetails);
+          break;
+        default:
+          const error = new Error("Invalid type");
+          error.statusCode = 422;
+          throw error;
+      }
+
       return user.save();
     })
     .then((result) => {
