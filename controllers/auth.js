@@ -20,10 +20,17 @@ exports.signup = (req, res, next) => {
   const email = req.body.email;
   const name = req.body.name;
   const password = req.body.password;
+
+  // handle profile pic
+  let profilePicPath;
+  if (req.file) {
+    profilePicPath = req.file.path;
+  }
+
   bcrypt
     .hash(password, 12)
     .then((result) => {
-      const user = new User({ email, name, password: result });
+      const user = new User({ email, name, profilePicPath, password: result });
       return user.save();
     })
     .then((result) => {

@@ -40,18 +40,11 @@ exports.postListing = (req, res, next) => {
   const title = req.body.title;
   const description = req.body.description;
   const tutorId = req.userId;
-  let imagePath;
-
-  // handle image
-  if (req.file) {
-    imagePath = req.file.path;
-  }
 
   // Create listing in database
   const listing = new Listing({
     title,
     description,
-    imagePath,
     tutor: tutorId,
   });
 
@@ -108,7 +101,14 @@ exports.updateListing = (req, res, next) => {
       if (!listing) {
         const error = new Error("No listing found");
         error.statusCode = 404;
-        return next(error);
+        throw error;
+      }
+
+      // check if user is creator
+      if (listing.tutor.toString() !== req.userId) {
+        const error = new Error("Forbidden");
+        error.statusCode = 403;
+        throw error;
       }
 
       // listing found
@@ -118,6 +118,9 @@ exports.updateListing = (req, res, next) => {
     })
     .then((result) => {
       res.status(200).json(result);
+    })
+    .catch((err) => {
+      return next(err);
     });
 };
 

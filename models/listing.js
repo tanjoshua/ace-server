@@ -10,9 +10,6 @@ const listingSchema = Schema(
     description: {
       type: String,
     },
-    imagePath: {
-      type: String,
-    },
     tutor: {
       type: Schema.Types.ObjectId,
       ref: "Tutor",
