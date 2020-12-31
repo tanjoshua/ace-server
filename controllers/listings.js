@@ -64,7 +64,7 @@ exports.postListing = (req, res, next) => {
         throw error;
       }
 
-      tutor.listings.push(result);
+      tutor.listings.push(listingResult);
       return tutor.save();
     })
     .then(() => {

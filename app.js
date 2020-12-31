@@ -71,16 +71,19 @@ app.use((err, req, res, next) => {
 });
 
 // connect database
-mongoose.connect(
-  config.MDB_KEY,
-  { useNewUrlParser: true, useUnifiedTopology: true },
-  (err) => {
-    if (err) {
-      // error occured
-      console.log(err);
-    } else {
-      // start server
-      app.listen(8080);
-    }
-  }
-);
+mongoose
+  .connect(config.MDB_KEY, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then((result) => {
+    console.log(result);
+    // start server
+    const server = app.listen(8080);
+
+    // set up socket
+    const io = require("socket.io")(server);
+    io.on("connection", (socket) => {
+      console.log("connected");
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
