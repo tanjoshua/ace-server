@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const config = require("../config");
 
 // token will be in the Authorization header eg. Bearer <token>
 module.exports = (req, res, next) => {
@@ -16,7 +15,7 @@ module.exports = (req, res, next) => {
   token = token.split(" ")[1];
 
   try {
-    token = jwt.verify(token, config.JWT_KEY);
+    token = jwt.verify(token, process.env.JWT_KEY);
   } catch (err) {
     throw err;
   }

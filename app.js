@@ -5,13 +5,11 @@ const mongoose = require("mongoose");
 const path = require("path");
 const multer = require("multer");
 const { v4: uuid4 } = require("uuid");
+require("dotenv").config();
 
 // route imports
 const listingRoutes = require("./routes/listings");
 const authRoutes = require("./routes/auth");
-
-// config imports - config file is not uploaded to repo
-const config = require("./config");
 
 // configure storage via multer
 const fileStorage = multer.diskStorage({
@@ -72,14 +70,17 @@ app.use((err, req, res, next) => {
 
 // connect database
 mongoose
-  .connect(config.MDB_KEY, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MDB_KEY, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then((result) => {
     console.log(result);
     // start server
-    const server = app.listen(8080);
+    const server = app.listen(process.env.PORT || 3000);
 
     // set up socket
-    const io = require("socket.io")(server);
+    const io = require("./utils/socket")(server);
     io.on("connection", (socket) => {
       console.log("connected");
     });

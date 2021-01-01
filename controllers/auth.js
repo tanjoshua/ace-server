@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 // internal imports
-const config = require("../config"); // not stored in repo
 const User = require("../models/users/user");
 const Tutor = require("../models/users/tutor");
 const Student = require("../models/users/student");
@@ -91,7 +90,7 @@ exports.login = (req, res, next) => {
             email: user.email,
             userId: user._id.toString(),
           },
-          config.JWT_KEY
+          process.env.JWT_KEY
         );
 
         res.json({ token, userId: user._id.toString() });
