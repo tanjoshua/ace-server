@@ -6,6 +6,7 @@ const path = require("path");
 const multer = require("multer");
 const { v4: uuid4 } = require("uuid");
 require("dotenv").config();
+const helmet = require("helmet");
 
 // route imports
 const listingRoutes = require("./routes/listings");
@@ -55,13 +56,20 @@ app.use((req, res, next) => {
   next();
 });
 
+// use helmet to set standard http headers for security
+app.use(helmet());
+
 // implement routes
 app.use("/listings", listingRoutes);
 app.use("/auth", authRoutes);
 
+// route not found
+app.use("/", (req, res, next) => {
+  res.status(404).json({ message: "route not found" });
+});
+
 // handling errors
 app.use((err, req, res, next) => {
-  console.log(err);
   const status = err.statusCode || 500;
   const message = err.message;
 
@@ -75,12 +83,11 @@ mongoose
     useUnifiedTopology: true,
   })
   .then((result) => {
-    console.log(result);
     // start server
     const server = app.listen(process.env.PORT || 3000);
 
     // set up socket
-    const io = require("./utils/socket")(server);
+    const io = require("./utils/socket").init(server);
     io.on("connection", (socket) => {
       console.log("connected");
     });
