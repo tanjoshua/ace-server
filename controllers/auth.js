@@ -28,11 +28,13 @@ exports.signup = async (req, res, next) => {
   const type = req.body.type;
 
   // handle profile pic TODO: error handling
-  let profilePicPath;
+  let profilePic;
   if (req.file) {
     const uploadResponse = await images.upload(req.file.path);
-    console.log(uploadResponse);
-    profilePicPath = uploadResponse.secure_url;
+    profilePic = {
+      url: uploadResponse.secure_url,
+      public_id: uploadResponse.public_id,
+    };
 
     // remove file from disk storage
     fs.unlinkSync(req.file.path);
@@ -41,7 +43,7 @@ exports.signup = async (req, res, next) => {
   bcrypt
     .hash(password, 12)
     .then((result) => {
-      const userDetails = { email, name, profilePicPath, password: result };
+      const userDetails = { email, name, profilePic, password: result };
       let user;
 
       // handle account types

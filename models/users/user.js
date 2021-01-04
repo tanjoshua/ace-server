@@ -14,8 +14,9 @@ const userSchema = Schema({
     type: String,
     required: true,
   },
-  profilePicPath: {
-    type: String,
+  profilePic: {
+    url: { type: String },
+    public_id: { type: String },
   },
 });
 
