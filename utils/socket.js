@@ -1,5 +1,6 @@
 let io;
 
+// file to store io from socket.io
 module.exports = {
   init: (server) => {
     io = require("socket.io")(server);

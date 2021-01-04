@@ -2,18 +2,21 @@
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 
 // internal imports
 const User = require("../models/users/user");
 const Tutor = require("../models/users/tutor");
 const Student = require("../models/users/student");
 const Parent = require("../models/users/parent");
+const images = require("../utils/images");
 
 // signup
-exports.signup = (req, res, next) => {
+exports.signup = async (req, res, next) => {
   // checking validation
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log(errors);
     const err = new Error("Validation failed");
     err.statusCode = 422;
     return next(err);
@@ -24,10 +27,15 @@ exports.signup = (req, res, next) => {
   const password = req.body.password;
   const type = req.body.type;
 
-  // handle profile pic
+  // handle profile pic TODO: error handling
   let profilePicPath;
   if (req.file) {
-    profilePicPath = req.file.path;
+    const uploadResponse = await images.upload(req.file.path);
+    console.log(uploadResponse);
+    profilePicPath = uploadResponse.secure_url;
+
+    // remove file from disk storage
+    fs.unlinkSync(req.file.path);
   }
 
   bcrypt
