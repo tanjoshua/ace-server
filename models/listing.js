@@ -10,6 +10,10 @@ const listingSchema = Schema(
     description: {
       type: String,
     },
+    hourlyRate: {
+      type: Number,
+      required: true,
+    },
     tutor: {
       type: Schema.Types.ObjectId,
       ref: "Tutor",

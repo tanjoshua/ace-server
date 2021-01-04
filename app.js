@@ -7,6 +7,7 @@ const multer = require("multer");
 const { v4: uuid4 } = require("uuid");
 require("dotenv").config();
 const helmet = require("helmet");
+const compression = require("compression");
 
 // route imports
 const listingRoutes = require("./routes/listings");
@@ -58,6 +59,7 @@ app.use((req, res, next) => {
 
 // use helmet to set standard http headers for security
 app.use(helmet());
+app.use(compression());
 
 // implement routes
 app.use("/listings", listingRoutes);

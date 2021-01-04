@@ -39,12 +39,14 @@ exports.postListing = (req, res, next) => {
   // parsing in data
   const title = req.body.title;
   const description = req.body.description;
+  const hourlyRate = req.body.hourlyRate;
   const tutorId = req.userId;
 
   // Create listing in database
   const listing = new Listing({
     title,
     description,
+    hourlyRate,
     tutor: tutorId,
   });
 
@@ -92,6 +94,7 @@ exports.updateListing = (req, res, next) => {
   // parsing data
   const listingId = req.params.listingId;
   const title = req.body.title;
+  const hourlyRate = req.body.hourlyRate;
   const description = req.body.description;
 
   // update in database
@@ -114,6 +117,7 @@ exports.updateListing = (req, res, next) => {
       // listing found
       listing.title = title;
       listing.description = description;
+      listing.hourlyRate = hourlyRate;
       return listing.save();
     })
     .then((result) => {
