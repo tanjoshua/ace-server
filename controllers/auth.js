@@ -66,7 +66,17 @@ exports.signup = async (req, res, next) => {
       return user.save();
     })
     .then((result) => {
-      res.status(201).json(result);
+      // create jwt
+      const token = jwt.sign(
+        {
+          name: result.name,
+          email: result.email,
+          userId: result._id.toString(),
+        },
+        process.env.JWT_KEY
+      );
+
+      res.status(201).json({ token, userId: result._id.toString() });
     })
     .catch((err) => {
       return next(err);
