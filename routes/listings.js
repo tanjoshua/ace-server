@@ -5,6 +5,7 @@ const { body } = require("express-validator");
 // internal imports
 const listingController = require("../controllers/listings");
 const checkAuth = require("../middleware/checkAuth");
+const checkTutor = require("../middleware/checkTutor");
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.get("/", checkAuth, listingController.getListings);
 router.post(
   "/",
   checkAuth,
+  checkTutor, // only tutors can create listings
   // validation
   [body("title").trim().isLength({ min: 5 }), body("description").trim()],
   listingController.postListing
