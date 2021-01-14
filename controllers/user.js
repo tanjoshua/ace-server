@@ -8,7 +8,7 @@ exports.getUserDetails = async (req, res, next) => {
   const userId = req.userId;
 
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).select("name email profilePic");
     if (!user) {
       const err = new Error("User not found");
       err.statusCode = 404;
