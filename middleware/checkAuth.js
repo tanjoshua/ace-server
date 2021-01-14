@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 // token will be in the Authorization header eg. Bearer <token>
+// userId will be placed in req.userId
 module.exports = (req, res, next) => {
   let token = req.get("Authorization");
 

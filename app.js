@@ -12,6 +12,7 @@ const compression = require("compression");
 // route imports
 const listingRoutes = require("./routes/listings");
 const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/user");
 
 // configure storage via multer
 const fileStorage = multer.diskStorage({
@@ -64,6 +65,7 @@ app.use(compression());
 // implement routes
 app.use("/listings", listingRoutes);
 app.use("/auth", authRoutes);
+app.use("/user", userRoutes);
 
 // route not found
 app.use("/", (req, res, next) => {
