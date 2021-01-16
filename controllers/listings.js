@@ -23,7 +23,11 @@ exports.getListings = (req, res, next) => {
         .limit(count);
     })
     .then((listings) => {
-      res.json({ listings, totalCount });
+      res.json({
+        listings,
+        totalCount,
+        totalPages: Math.ceil(totalCount / count),
+      });
     })
     .catch((err) => {
       return next(err);

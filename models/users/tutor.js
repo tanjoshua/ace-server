@@ -22,7 +22,7 @@ const tutorSchema = Schema({
   },
 });
 
-// compute average rating TODO: fix
+// compute average rating TODO: FIX BUG
 tutorSchema.virtual("averageRating").get(() => {
   console.log(this.totalRating);
   console.log(this.ratingCount);
