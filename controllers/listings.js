@@ -15,6 +15,10 @@ exports.getListings = (req, res, next) => {
     .then((num) => {
       totalCount = num;
       return Listing.find()
+        .populate(
+          "tutor",
+          "name profilePic totalRating ratingCount averageRating"
+        )
         .skip((page - 1) * count)
         .limit(count);
     })

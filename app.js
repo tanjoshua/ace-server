@@ -89,6 +89,7 @@ mongoose
   .then((result) => {
     // start server
     const server = app.listen(process.env.PORT || 3000);
+    console.log("server up");
 
     // set up socket
     const io = require("./utils/socket").init(server);

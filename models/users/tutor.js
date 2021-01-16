@@ -22,10 +22,13 @@ const tutorSchema = Schema({
   },
 });
 
-// compute average rating
+// compute average rating TODO: fix
 tutorSchema.virtual("averageRating").get(() => {
-  if (!this.ratingCount) {
-    return this.totalRating / this.ratingCount;
+  console.log(this.totalRating);
+  console.log(this.ratingCount);
+  console.log(this.totalRating / this.ratingCount);
+  if (this.ratingCount !== 0) {
+    return parseFloat(this.totalRating) / this.ratingCount;
   } else {
     return 0;
   }
