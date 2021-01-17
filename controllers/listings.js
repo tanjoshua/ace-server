@@ -186,6 +186,7 @@ exports.deleteListing = (req, res, next) => {
 exports.getListing = (req, res, next) => {
   const listingId = req.params.listingId;
   Listing.findById(listingId)
+    .populate("tutor", "name profilePic totalRating ratingCount averageRating")
     .then((listing) => {
       // listing not found
       if (!listing) {

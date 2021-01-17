@@ -19,7 +19,11 @@ router.post(
   checkAuth,
   checkTutor, // only tutors can create listings
   // validation
-  [body("title").trim().isLength({ min: 5 }), body("description").trim()],
+  [
+    body("title").trim().isLength({ min: 5 }),
+    body("description").trim(),
+    body("hourlyRate").notEmpty(),
+  ],
   listingController.postListing
 );
 
