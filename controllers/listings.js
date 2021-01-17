@@ -7,14 +7,37 @@ const Tutor = require("../models/users/tutor");
 
 // get listings
 exports.getListings = (req, res, next) => {
+  let filter = {};
+  let sortBy = { createdAt: -1 };
+
   const page = req.query.page || 1;
+
+  // implement sort
+
+  // implement search query
+  if (req.query.searchQuery) {
+    filter = {
+      // search in both title and description
+      $or: [
+        {
+          title: { $regex: req.query.searchQuery },
+        },
+        {
+          description: { $regex: req.query.searchQuery },
+        },
+      ],
+    };
+  }
+
   const count = 10;
   let totalCount;
 
+  // TODO: fix doc number
   Listing.countDocuments()
     .then((num) => {
       totalCount = num;
-      return Listing.find()
+      return Listing.find(filter)
+        .sort(sortBy)
         .populate(
           "tutor",
           "name profilePic totalRating ratingCount averageRating"
