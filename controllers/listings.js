@@ -6,55 +6,52 @@ const Listing = require("../models/listing");
 const Tutor = require("../models/users/tutor");
 
 // get listings
-exports.getListings = (req, res, next) => {
-  let filter = {};
-  let sortBy = { createdAt: -1 };
+exports.getListings = async (req, res, next) => {
+  try {
+    let filter = {};
+    let sortBy = { createdAt: -1 };
 
-  const page = req.query.page || 1;
+    const page = req.query.page || 1;
+    const docsPerPage = 10;
 
-  // implement sort
+    // implement sort
+    if (req.query.sortBy) {
+      //TODO: implement
+    }
 
-  // implement search query
-  if (req.query.searchQuery) {
-    filter = {
-      // search in both title and description
-      $or: [
-        {
-          title: { $regex: req.query.searchQuery },
-        },
-        {
-          description: { $regex: req.query.searchQuery },
-        },
-      ],
-    };
-  }
+    // implement search query
+    if (req.query.searchQuery) {
+      filter = {
+        // search in both title and description
+        $or: [
+          {
+            title: { $regex: req.query.searchQuery },
+          },
+          {
+            description: { $regex: req.query.searchQuery },
+          },
+        ],
+      };
+    }
 
-  const count = 10;
-  let totalCount;
-
-  // TODO: fix doc number
-  Listing.countDocuments()
-    .then((num) => {
-      totalCount = num;
-      return Listing.find(filter)
-        .sort(sortBy)
-        .populate(
-          "tutor",
-          "name profilePic totalRating ratingCount averageRating"
-        )
-        .skip((page - 1) * count)
-        .limit(count);
-    })
-    .then((listings) => {
-      res.json({
-        listings,
-        totalCount,
-        totalPages: Math.ceil(totalCount / count),
-      });
-    })
-    .catch((err) => {
-      return next(err);
+    const result = await Listing.paginate(filter, {
+      page,
+      limit: docsPerPage,
+      populate: {
+        path: "tutor",
+        sort: sortBy,
+        select: "name profilePic totalRating ratingCount averageRating",
+      },
     });
+
+    res.json({
+      listings: result.docs,
+      totalCount: result.total,
+      totalPages: Math.ceil(result.total / docsPerPage),
+    });
+  } catch (error) {
+    return next(error);
+  }
 };
 
 // create listing
