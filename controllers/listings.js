@@ -25,7 +25,7 @@ exports.getListings = async (req, res, next) => {
         // search in both title and description
         $or: [
           {
-            title: { $regex: req.query.searchQuery },
+            title: { $regex: req.query.searchQuery, $options: "i" },
           },
           {
             description: { $regex: req.query.searchQuery },
