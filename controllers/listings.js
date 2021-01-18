@@ -28,7 +28,7 @@ exports.getListings = async (req, res, next) => {
             title: { $regex: req.query.searchQuery, $options: "i" },
           },
           {
-            description: { $regex: req.query.searchQuery },
+            description: { $regex: req.query.searchQuery, $options: "i" },
           },
         ],
       };
